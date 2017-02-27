@@ -1,0 +1,51 @@
+CITY Stockholm Sweden 2269060
+CITY Göteborg Sweden 997446
+CITY Malmö Sweden 280415
+CITY Umeå Sweden 83249
+CITY Lund Sweden 87244
+CITY Norrköping Sweden 93765
+CITY Jönköping Sweden 93797
+CITY Luleå Sweden 46607
+TOWN Smedby Sweden 3607
+TOWN Sveg Sweden 2543
+TOWN Laholm Sweden 6527
+TOWN Kungshamn Sweden 3657
+TOWN Svalöv Sweden 3852
+TOWN Lillpite Sweden 385
+
+CITY Oslo Norway 538411
+CITY Bergen Norway 242158
+CITY Trondheim Norway 156161
+TOWN Skudeneshavn Norway 1209
+
+CITY Köpenhamn Denmark 1086762
+CITY Århus Denmark 228547
+CITY Odense Denmark 145554
+TOWN Nysted Denmark 1381
+TOWN Svaneke Denmark 1138
+
+ROAD Stockholm Sweden Göteborg Sweden
+ROAD Göteborg Sweden Malmö Sweden
+ROAD Umeå Sweden Luleå Sweden
+ROAD Luleå Sweden Stockholm Sweden
+ROAD Norrköping Sweden Jönköping Sweden
+ROAD Lund Sweden Malmö Sweden
+ROAD Stockholm Sweden Jönköping Sweden
+ROAD Norrköping Sweden Smedby Sweden
+ROAD Jönköping Sweden Sveg Sweden
+ROAD Göteborg Sweden Laholm Sweden
+ROAD Malmö Sweden Kungshamn Sweden
+ROAD Malmö Sweden Svalöv Sweden
+ROAD Umeå Sweden Lillpite Sweden
+
+ROAD Oslo Norway Bergen Norway
+ROAD Bergen Norway Trondheim Norway
+ROAD Skudeneshavn Norway Oslo Norway
+
+ROAD Köpenhamn Denmark Århus Denmark
+ROAD Århus Denmark Odense Denmark
+ROAD Århus Denmark Nysted Denmark
+ROAD Köpenhamn Denmark Svaneke Denmark
+
+ROAD Stockholm Sweden Oslo Norway
+ROAD Stockholm Sweden Köpenhamn Denmark
