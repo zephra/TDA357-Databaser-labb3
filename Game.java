@@ -115,25 +115,8 @@ public class Game
 	void insertCity(Connection conn, String name, String country, String population) throws SQLException {
 	    String query;
 	    PreparedStatement statement;
-	    ResultSet resultSet;
 
 		try {
-
-			query = "SELECT COUNT(*) AS matchingCountries FROM Countries WHERE name = ?";
-			statement = conn.prepareStatement(query);
-			statement.setString(1, country);
-			resultSet = statement.executeQuery();
-
-			resultSet.next();
-			boolean countryExists = resultSet.getInt("matchingCountries") == 1;
-			
-			if (!countryExists) {
-				query = "INSERT INTO countries(name) VALUES(?)";
-				statement = conn.prepareStatement(query);
-				statement.setString(1, country);
-				statement.executeUpdate();
-			}
-
 			query = "INSERT INTO areas(country, name, population) VALUES(?, ?, ?)";
 			statement = conn.prepareStatement(query);
 			statement.setString(1, country);
@@ -179,20 +162,46 @@ public class Game
 	 * should return the area name of the player's current location.
 	 */
 	String getCurrentArea(Connection conn, Player person) throws SQLException {
-		// TODO: Your implementation here
-	    
-		// TODO TO HERE
-		return "";
+		String query;
+	    PreparedStatement statement;
+	    ResultSet resultSet;
+
+		try {
+			query = "SELECT locationarea FROM Persons WHERE country = ? AND personnummer = ?";
+			statement = conn.prepareStatement(query);
+			statement.setString(1, person.country);
+			statement.setString(2, person.personnummer);
+			resultSet = statement.executeQuery();
+			resultSet.next();
+			return resultSet.getString("locationarea");
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+		return null;
 	}
 
 	/* Given a player, this function
 	 * should return the country name of the player's current location.
 	 */
 	String getCurrentCountry(Connection conn, Player person) throws SQLException {
-		// TODO: Your implementation here
-	    
-		// TODO TO HERE
-		return "";
+		String query;
+	    PreparedStatement statement;
+	    ResultSet resultSet;
+
+		try {
+			query = "SELECT locationcountry FROM Persons WHERE country = ? AND personnummer = ?";
+			statement = conn.prepareStatement(query);
+			statement.setString(1, person.country);
+			statement.setString(2, person.personnummer);
+			resultSet = statement.executeQuery();
+			resultSet.next();
+			return resultSet.getString("locationcountry");
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+
+		return null;
 	}
 
 	/* Given a player, this function
@@ -201,9 +210,22 @@ public class Game
  	 * The location should be random and the budget should be 1000.
 	 */
 	int createPlayer(Connection conn, Player person) throws SQLException {
-		// TODO: Your implementation here
-	    
-		// TODO TO HERE
+		String query;
+	    PreparedStatement statement;
+	    ResultSet resultSet;
+
+		try {
+			query = "SELECT locationcountry FROM Persons WHERE country = ? AND personnummer = ?";
+			statement = conn.prepareStatement(query);
+			statement.setString(1, person.country);
+			statement.setString(2, person.personnummer);
+			resultSet = statement.executeQuery();
+			resultSet.next();
+			return resultSet.getString("locationcountry");
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		
 		return 0;
 	}
 
