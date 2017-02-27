@@ -34,8 +34,8 @@ public class Game
 		}
 	}
 
- 	String USERNAME = "tda357_009";
- 	String PASSWORD = "androidsucks";
+ 	String USERNAME = "USERNAME";
+ 	String PASSWORD = "PASSWORD";
 
 	/* Print command optionssetup.
 	* /!\ you don't need to change this function! */
