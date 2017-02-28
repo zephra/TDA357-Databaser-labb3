@@ -239,8 +239,7 @@ public class Game
             statement.setString(3, person.playername);
             statement.setString(4, "Sweden");
             statement.setString(5, "Stockholm");
-            statement.executeQuery();
-            return 1;
+            return statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -281,10 +280,10 @@ public class Game
      * The output should include area names, country names and the associated road-taxes
      */
     void getNextMoves(Connection conn, Player person) throws SQLException {
-        // TODO: Your implementation here
-        // hint: Use your implementation of the overloaded getNextMoves function
-        
-        // TODO TO HERE
+        String country = getCurrentCountry(conn, person);
+        String area = getCurrentArea(conn, person);
+
+        getNextMoves(conn, person, country, area);
     }
 
     /* Given a personnummer and a country, this function
@@ -292,9 +291,42 @@ public class Game
      * that is identified by the tuple of personnummer and country.
      */
     void listProperties(Connection conn, String personnummer, String country) {
-        // TODO: Your implementation here
-        
-        // TODO TO HERE
+        String query;
+        PreparedStatement statement;
+        ResultSet resultSet;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        try {
+            query = "SELECT name, locationcountry, locationname FROM hotels WHERE ownercountry = ? AND ownerpersonnummer = ?";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, country);
+            statement.setString(2, personnummer);
+            resultSet = statement.executeQuery();
+
+            System.out.println("HOTELS:\n");
+            while (resultSet.next()) {
+                stringBuilder.append("\n" + resultSet.getString("name") + ", "
+                    + resultSet.getString("locationcountry") + ", "
+                    + resultSet.getString("locationname"));
+            }
+
+            query = "SELECT fromcountry, fromarea, tocountry, toarea FROM roads WHERE ownercountry = ? AND ownerpersonnummer = ?";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, country);
+            statement.setString(2, personnummer);
+            resultSet = statement.executeQuery();
+            stringBuilder.append("\nROADS:");
+            while (resultSet.next()) {
+                stringBuilder.append("\nFrom: "
+                    + resultSet.getString("fromcountry") + ", "
+                    + resultSet.getString("fromarea") + " To: "
+                    + resultSet.getString("tocountry") + ", "
+                    + resultSet.getString("toarea"));
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("Properties: " + stringBuilder.toString());
     }
 
     /* Given a player, this function
