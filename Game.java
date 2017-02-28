@@ -449,9 +449,22 @@ public class Game
      * and return 1 in case of a success and 0 otherwise.
      */
     int buyHotel(Connection conn, Player person, String name, String city, String country) throws SQLException {
-        // TODO: Your implementation here
-        
-        // TODO TO HERE
+        String query;
+        PreparedStatement statement;
+
+        try {
+            query = "INSERT INTO Hotels(name, locationcountry, locationname, ownercountry, ownerpersonnummer) "+
+                    "VALUES(?, ?, ?, ?, ?)";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, name);
+            statement.setString(2, country);
+            statement.setString(3, city);
+            statement.setString(4, person.country);
+            statement.setString(5, person.personnummer);
+            return statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
         return 0;
     }
 
