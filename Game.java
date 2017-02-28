@@ -437,10 +437,27 @@ public class Game
      * and return 1 in case of a success and 0 otherwise.
      */
     int changeLocation(Connection conn, Player person, String area, String country) throws SQLException {
-        // TODO: Your implementation here
-        
-        // TODO TO HERE
-        return 0;
+        String query;
+        PreparedStatement statement;
+        ResultSet resultSet;
+
+        int updated = 0;
+        try {
+            query = "UPDATE Persons "+
+                    "SET locationarea = ?, locationcountry = ? "+
+                    "WHERE country = ? AND personnummer = ? ";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, area);
+            statement.setString(2, country);
+            statement.setString(3, person.country);
+            statement.setString(4, person.personnummer);
+            updated = statement.executeUpdate();
+            
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return Math.min(updated, 1);
     }
 
     /* This function should add the visitbonus of 1000 to a random city
@@ -472,9 +489,6 @@ public class Game
     /* This function should print the winner of the game based on the currently highest budget.
      */
     void announceWinner(Connection conn) throws SQLException {
-
-        // TODO: make sure it's not the government
-
         String query;
         PreparedStatement statement;
         ResultSet resultSet;
@@ -482,13 +496,18 @@ public class Game
         try {
             query = "SELECT personnummer, country "+
                     "FROM Persons "+
+                    "WHERE country <> '' AND personnummer <> '' "+
                     "ORDER BY budget DESC ";
             statement = conn.prepareStatement(query);
             resultSet = statement.executeQuery();
-            resultSet.next();
-            System.out.println("And the winner is: "
-                +resultSet.getString("personnummer")
-                +", "+resultSet.getString("country"));
+            boolean foundWinner = resultSet.next();
+            if (foundWinner) {
+                System.out.println("And the winner is: "
+                    +resultSet.getString("personnummer")
+                    +", "+resultSet.getString("country"));
+            } else {
+                System.out.println("There are no winners :(");
+            }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -530,11 +549,12 @@ public class Game
             final Connection conn = DriverManager.getConnection(url, props);
 
             PreparedStatement clearStatement = conn.prepareStatement(
-                "delete from roads cascade;"+
-                "delete from persons cascade;"+
-                "delete from towns cascade;"+
-                "delete from cities cascade;"+
-                "delete from areas cascade;"+
+                "delete from roads cascade; "+
+                "delete from hotels cascade; "+
+                "delete from persons cascade; "+
+                "delete from towns cascade; "+
+                "delete from cities cascade; "+
+                "delete from areas cascade; "+
                 "delete from countries cascade;"
                 );
             clearStatement.executeUpdate();
