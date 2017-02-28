@@ -356,17 +356,46 @@ public class Game
     /* This function should add the visitbonus of 1000 to a random city
      */
     void setVisitingBonus(Connection conn) throws SQLException {
-        // TODO: Your implementation here
+        // String query;
+        // PreparedStatement statement;
+        // ResultSet resultSet;
         
-        // TODO TO HERE
+
+        // try {
+        //     query = "SELECT country, name "+
+        //             "FROM Cities";
+        //     statement = conn.prepareStatement(query);
+        //     resultSet = statement.executeQuery();
+        //     resultSet.next();
+            
+        // } catch (SQLException e) {
+        //     System.out.println(e.getMessage());
+        // }
     }
 
     /* This function should print the winner of the game based on the currently highest budget.
      */
     void announceWinner(Connection conn) throws SQLException {
-        // TODO: Your implementation here
-        
-        // TODO TO HERE
+
+        // TODO: make sure it's not the government
+
+        String query;
+        PreparedStatement statement;
+        ResultSet resultSet;
+
+        try {
+            query = "SELECT personnummer, country, MAX(budget) "+
+                    "FROM Persons "+
+                    "GROUP BY personnummer, country ";
+            statement = conn.prepareStatement(query);
+            resultSet = statement.executeQuery();
+            resultSet.next();
+            System.out.println("And the winner is: "
+                +resultSet.getString(1)
+                +", "+resultSet.getString(2));
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     void play (String worldfile) throws IOException {
