@@ -230,22 +230,20 @@ public class Game
     int createPlayer(Connection conn, Player person) throws SQLException {
         String query;
         PreparedStatement statement;
-        ResultSet resultSet;
 
         try {
-            query = "SELECT locationcountry FROM Persons WHERE country = ? AND personnummer = ?";
+            query = "INSERT INTO persons(country, personnummer, name, locationcountry, locationarea, budget) VALUES(?, ?, ?, ?, ?, 1000)";
             statement = conn.prepareStatement(query);
             statement.setString(1, person.country);
             statement.setString(2, person.personnummer);
-            resultSet = statement.executeQuery();
-            resultSet.next();
-            // return resultSet.getString("locationcountry");
-            resultSet.getString("locationcountry");
+            statement.setString(3, person.playername);
+            statement.setString(4, "Sweden");
+            statement.setString(5, "Stockholm");
+            statement.executeQuery();
             return 1;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        
         return 0;
     }
 
@@ -255,9 +253,9 @@ public class Game
      * The output should include area names, country names and the associated road-taxes
      */
     void getNextMoves(Connection conn, Player person, String area, String country) throws SQLException {
-        // TODO: Your implementation here
         
-        // TODO TO HERE
+
+        
     }
 
     /* Given a player, this function
@@ -472,7 +470,8 @@ public class Game
                 String[] cmd = mode.split(" +");
                 cmd[0] = cmd[0].toLowerCase();
                 if ("new player".startsWith(cmd[0]) && (cmd.length == 5)) {
-                    Player nextplayer = new Player(cmd[1], cmd[2], cmd[3], cmd[4]);
+                    System.out.println("new Player("+cmd[2]+", "+cmd[3]+", "+cmd[4]+")");
+                    Player nextplayer = new Player(cmd[2], cmd[3], cmd[4], "");
                     if (createPlayer(conn, nextplayer) == 1) {
                         players.add(nextplayer);
                     }
