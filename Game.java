@@ -72,6 +72,7 @@ public class Game
         ResultSet resultSet;
 
         try {
+
             query = "SELECT COUNT(*) AS matchingCountries FROM Countries WHERE name = ?";
             statement = conn.prepareStatement(query);
             statement.setString(1, country);
@@ -80,6 +81,7 @@ public class Game
             resultSet.next();
             boolean countryExists = resultSet.getInt("matchingCountries") == 1;
             
+
             if (!countryExists) {
                 query = "INSERT INTO countries(name) VALUES(?)";
                 statement = conn.prepareStatement(query);
@@ -101,7 +103,6 @@ public class Game
             statement.setString(2, name);
             statement.executeUpdate();
 
-            
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
@@ -115,8 +116,25 @@ public class Game
     void insertCity(Connection conn, String name, String country, String population) throws SQLException {
         String query;
         PreparedStatement statement;
+        ResultSet resultSet;
 
         try {
+            query = "SELECT COUNT(*) AS matchingCountries FROM Countries WHERE name = ?";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, country);
+            resultSet = statement.executeQuery();
+
+            resultSet.next();
+            boolean countryExists = resultSet.getInt("matchingCountries") == 1;
+            
+
+            if (!countryExists) {
+                query = "INSERT INTO countries(name) VALUES(?)";
+                statement = conn.prepareStatement(query);
+                statement.setString(1, country);
+                statement.executeUpdate();
+            }
+
             query = "INSERT INTO areas(country, name, population) VALUES(?, ?, ?)";
             statement = conn.prepareStatement(query);
             statement.setString(1, country);
@@ -365,6 +383,7 @@ public class Game
             if ((line = nf.readLine()) != null) {
                 PASSWORD = line;
             }
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -386,7 +405,6 @@ public class Game
             props.setProperty("password",PASSWORD);
 
             final Connection conn = DriverManager.getConnection(url, props);
-            insertTown(conn, "Brastad", "Sweden", "990000");
 
             PreparedStatement clearStatement = conn.prepareStatement(
                 "delete from roads cascade;"+
@@ -424,10 +442,11 @@ public class Game
 
             // Initialize the database from the worldfile
             try {
+                conn.setAutoCommit(false);
                 BufferedReader br = new BufferedReader(new FileReader(worldfile));
                 String line;
                 while ((line = br.readLine()) != null) {
-                String[] cmd = line.split(" +");
+                    String[] cmd = line.split(" +");
                     if ("ROAD".equals(cmd[0]) && (cmd.length == 5)) {
                         insertRoad(conn, cmd[1], cmd[2], cmd[3], cmd[4]);
                     } else if ("TOWN".equals(cmd[0]) && (cmd.length == 4)) {
@@ -438,8 +457,11 @@ public class Game
                         insertCity(conn, cmd[1], cmd[2], cmd[3]);
                     }
                 }
+                conn.commit();
             } catch (Exception e) {
                 System.out.println(e.getMessage());
+            } finally {
+                conn.setAutoCommit(true);
             }
 
             ArrayList<Player> players = new ArrayList<Player>();
