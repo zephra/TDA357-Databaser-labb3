@@ -239,7 +239,7 @@ public class Game
             statement.setString(3, person.playername);
             statement.setString(4, "Sweden");
             statement.setString(5, "Stockholm");
-            statement.executeQuery();
+            statement.executeUpdate();
             return 1;
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -407,15 +407,15 @@ public class Game
         ResultSet resultSet;
 
         try {
-            query = "SELECT personnummer, country, MAX(budget) "+
+            query = "SELECT personnummer, country "+
                     "FROM Persons "+
-                    "GROUP BY personnummer, country ";
+                    "ORDER BY budget DESC ";
             statement = conn.prepareStatement(query);
             resultSet = statement.executeQuery();
             resultSet.next();
             System.out.println("And the winner is: "
-                +resultSet.getString(1)
-                +", "+resultSet.getString(2));
+                +resultSet.getString("personnummer")
+                +", "+resultSet.getString("country"));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
