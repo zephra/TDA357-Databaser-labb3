@@ -80,7 +80,6 @@ public class Game
 
             resultSet.next();
             boolean countryExists = resultSet.getInt("matchingCountries") == 1;
-            
 
             if (!countryExists) {
                 query = "INSERT INTO countries(name) VALUES(?)";
@@ -356,7 +355,7 @@ public class Game
         StringBuilder stringBuilder = new StringBuilder();
 
         try {
-            query = "SELECT * FROM assetsummaryy";
+            query = "SELECT * FROM assetsummary";
             statement = conn.prepareStatement(query);
             resultSet = statement.executeQuery();
 
@@ -578,10 +577,18 @@ public class Game
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
-            String url = "jdbc:postgresql://ate.ita.chalmers.se/";
+
+            // School DB
+            // String url = "jdbc:postgresql://ate.ita.chalmers.se/";
+            // Properties props = new Properties();
+            // props.setProperty("user",USERNAME);
+            // props.setProperty("password",PASSWORD);
+
+            // Andreas testing DB
+            String url = "jdbc:postgresql://82.196.9.97/";
             Properties props = new Properties();
-            props.setProperty("user",USERNAME);
-            props.setProperty("password",PASSWORD);
+            props.setProperty("user","andreas");
+            props.setProperty("password","hejpadej");
 
             final Connection conn = DriverManager.getConnection(url, props);
 
