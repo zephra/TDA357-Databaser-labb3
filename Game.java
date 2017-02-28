@@ -253,9 +253,26 @@ public class Game
      * The output should include area names, country names and the associated road-taxes
      */
     void getNextMoves(Connection conn, Player person, String area, String country) throws SQLException {
-        
+        String query;
+        PreparedStatement statement;
+        ResultSet resultSet;
+        StringBuilder stringBuilder = new StringBuilder();
 
-        
+        try {
+            query = "SELECT destcountry, destarea FROM nextmoves WHERE personcountry = ? AND personnummer = ? AND country = ? AND area = ?";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, person.country);
+            statement.setString(2, person.personnummer);
+            statement.setString(3, country);
+            statement.setString(4, area);
+            resultSet = statement.executeQuery();
+            while (resultSet.next()) {
+                stringBuilder.append(resultSet.getString("destcountry") + ", " + resultSet.getString("destarea") + ", ");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("Reachable areas: " + stringBuilder.toString());
     }
 
     /* Given a player, this function
