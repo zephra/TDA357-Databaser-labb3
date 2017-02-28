@@ -405,21 +405,27 @@ public class Game
     /* This function should add the visitbonus of 1000 to a random city
      */
     void setVisitingBonus(Connection conn) throws SQLException {
-        // String query;
-        // PreparedStatement statement;
-        // ResultSet resultSet;
-        
+        String query;
+        PreparedStatement statement;
+        ResultSet resultSet;
 
-        // try {
-        //     query = "SELECT country, name "+
-        //             "FROM Cities";
-        //     statement = conn.prepareStatement(query);
-        //     resultSet = statement.executeQuery();
-        //     resultSet.next();
+        try {
+            query = "UPDATE Cities "+
+                    "SET visitbonus = visitbonus + 1000 "+
+                    "FROM ( "+
+                        "SELECT country, name "+
+                        "FROM Cities "+
+                        "ORDER BY random() "+
+                        "LIMIT 1 "+
+                    ") AS random_city "+
+                    "WHERE Cities.country = random_city.country "+
+                        "AND Cities.name = random_city.name";
+            statement = conn.prepareStatement(query);
+            statement.executeUpdate();
             
-        // } catch (SQLException e) {
-        //     System.out.println(e.getMessage());
-        // }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     /* This function should print the winner of the game based on the currently highest budget.
