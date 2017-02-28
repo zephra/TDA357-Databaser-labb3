@@ -333,18 +333,35 @@ public class Game
      * should list all properties of the player.
      */
     void listProperties(Connection conn, Player person) throws SQLException {
-        // TODO: Your implementation here
-        // hint: Use your implementation of the overlaoded listProperties function
-        
-        // TODO TO HERE
+        listProperties(conn, person.personnummer, person.country);
     }
 
     /* This function should print the budget, assets and refund values for all players.
      */
     void showScores(Connection conn) throws SQLException {
-        // TODO: Your implementation here
-        
-        // TODO TO HERE
+        String query;
+        PreparedStatement statement;
+        ResultSet resultSet;
+        StringBuilder stringBuilder = new StringBuilder();
+
+        try {
+            query = "SELECT * FROM assetsummaryy";
+            statement = conn.prepareStatement(query);
+            resultSet = statement.executeQuery();
+
+            System.out.println("Assetsummary:\nCountry\tPerson number\tBudget\tAssets\tReclaimable");
+            while (resultSet.next()) {
+                stringBuilder.append("\n" + resultSet.getString("country") + "\t"
+                    + resultSet.getString("personnummer") + "\t"
+                    + resultSet.getString("budget") + "\t"
+                    + resultSet.getString("assets") + "\t"
+                    + resultSet.getString("reclaimable"));
+            }
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        System.out.println("Scores:\n" + stringBuilder.toString());
     }
 
     /* Given a player, a from area and a to area, this function
@@ -352,9 +369,22 @@ public class Game
      * and return 1 in case of a success and 0 otherwise.
      */
     int sellRoad(Connection conn, Player person, String area1, String country1, String area2, String country2) throws SQLException {
-        // TODO: Your implementation here
-        
-        // TODO TO HERE
+        String query;
+        PreparedStatement statement;
+
+        try {
+            query = "UPDATE persons SET ownercountry = ?, ownerpersonnummer = ? WHERE fromcountry = ? AND fromarea = ? AND tocountry = ? AND toarea = ?";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, person.country);
+            statement.setString(2, person.personnummer);
+            statement.setString(3, country1);
+            statement.setString(4, area1);
+            statement.setString(5, country2);
+            statement.setString(6, area2);
+            return statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
         return 0;
     }
 
@@ -363,9 +393,20 @@ public class Game
      * and return 1 in case of a success and 0 otherwise.
      */
     int sellHotel(Connection conn, Player person, String city, String country) throws SQLException {
-        // TODO: Your implementation here
-        
-        // TODO TO HERE
+        String query;
+        PreparedStatement statement;
+
+        try {
+            query = "DELETE FROM hotels WHERE ownercountry = ?, ownerpersonnummer = ? AND locationcountry = ? AND locationname = ?";
+            statement = conn.prepareStatement(query);
+            statement.setString(1, person.country);
+            statement.setString(2, person.personnummer);
+            statement.setString(3, country);
+            statement.setString(4, city);
+            return statement.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
         return 0;
     }
 
@@ -439,15 +480,15 @@ public class Game
         ResultSet resultSet;
 
         try {
-            query = "SELECT personnummer, country, MAX(budget) "+
+            query = "SELECT personnummer, country "+
                     "FROM Persons "+
-                    "GROUP BY personnummer, country ";
+                    "ORDER BY budget DESC ";
             statement = conn.prepareStatement(query);
             resultSet = statement.executeQuery();
             resultSet.next();
             System.out.println("And the winner is: "
-                +resultSet.getString(1)
-                +", "+resultSet.getString(2));
+                +resultSet.getString("personnummer")
+                +", "+resultSet.getString("country"));
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
