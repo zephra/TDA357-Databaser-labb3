@@ -230,6 +230,7 @@ public class Game
     int createPlayer(Connection conn, Player person) throws SQLException {
         String query;
         PreparedStatement statement;
+        ResultSet resultSet;
 
         try {
           query = "SELECT country, name " +
