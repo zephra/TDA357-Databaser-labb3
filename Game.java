@@ -232,13 +232,23 @@ public class Game
         PreparedStatement statement;
 
         try {
+          query = "SELECT country, name " +
+            "FROM areas " +
+            "ORDER BY random() " +
+            "LIMIT 1 ";
+            statement = conn.prepareStatement(query);
+            resultSet = statement.executeQuery();
+            resultSet.next();
+            String country = resultSet.getString("country");
+            String area = resultSet.getString("name");
+
             query = "INSERT INTO persons(country, personnummer, name, locationcountry, locationarea, budget) VALUES(?, ?, ?, ?, ?, 1000)";
             statement = conn.prepareStatement(query);
             statement.setString(1, person.country);
             statement.setString(2, person.personnummer);
             statement.setString(3, person.playername);
-            statement.setString(4, "Sweden");
-            statement.setString(5, "Stockholm");
+            statement.setString(4, country);
+            statement.setString(5, area);
             return statement.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
