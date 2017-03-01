@@ -268,20 +268,26 @@ public class Game
         StringBuilder stringBuilder = new StringBuilder();
 
         try {
-            query = "SELECT destcountry, destarea FROM nextmoves WHERE personcountry = ? AND personnummer = ? AND country = ? AND area = ?";
+            query = "SELECT destcountry, destarea, cost FROM nextmoves WHERE personcountry = ? AND personnummer = ? AND country = ? AND area = ?";
             statement = conn.prepareStatement(query);
             statement.setString(1, person.country);
             statement.setString(2, person.personnummer);
             statement.setString(3, country);
             statement.setString(4, area);
             resultSet = statement.executeQuery();
+            
             while (resultSet.next()) {
-                stringBuilder.append(resultSet.getString("destcountry") + ", " + resultSet.getString("destarea") + ", ");
+                stringBuilder.append(resultSet.getString("destarea"));
+                stringBuilder.append(", ");
+                stringBuilder.append(resultSet.getString("destcountry"));
+                stringBuilder.append(" - road tax: ");
+                stringBuilder.append(resultSet.getString("cost"));
+                stringBuilder.append("\n");
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("Reachable areas: " + stringBuilder.toString());
+        System.out.println("Reachable areas:\n" + stringBuilder.toString());
     }
 
     /* Given a player, this function
@@ -292,8 +298,8 @@ public class Game
     void getNextMoves(Connection conn, Player person) throws SQLException {
         String country = getCurrentCountry(conn, person);
         String area = getCurrentArea(conn, person);
-
-        getNextMoves(conn, person, country, area);
+        // System.out.println("GetNextMoves: country: "+country+", area: "+area);
+        getNextMoves(conn, person, area, country);
     }
 
     /* Given a personnummer and a country, this function
