@@ -462,8 +462,8 @@ public class Game
         PreparedStatement statement;
 
         try {
-            query = "INSERT INTO roads(fromcountry, fromarea, tocountry, toarea, ownercountry, ownerpersonnummer) "+
-                    "VALUES(?, ?, ?, ?, ?, ?)";
+            query = "INSERT INTO roads(fromcountry, fromarea, tocountry, toarea, ownercountry, ownerpersonnummer, roadtax) "+
+                    "VALUES(?, ?, ?, ?, ?, ?, getval('roadtax'))";
             statement = conn.prepareStatement(query);
             statement.setString(1, country1);
             statement.setString(2, area1);
