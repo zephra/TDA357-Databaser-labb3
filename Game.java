@@ -1,3 +1,5 @@
+// Authors (for the missing methods): Andreas Carlsson, Robin Lilius-Lundmark
+
 /* This is the driving engine of the program. It parses the command-line
  * arguments and calls the appropriate methods in the other classes.
  *
@@ -387,7 +389,8 @@ public class Game
             statement = conn.prepareStatement(query);
             resultSet = statement.executeQuery();
 
-            stringBuilder.append("Country\tPerson number\tBudget\tAssets\tReclaimable");
+            stringBuilder.append("Country\tPerson number\tBudget\tAssets\tReclaimable\n" +
+                "===================================================");
             while (resultSet.next()) {
                 stringBuilder.append("\n");
                 stringBuilder.append(resultSet.getString("country"));
@@ -404,7 +407,7 @@ public class Game
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("Scores:\n" + stringBuilder.toString());
+        System.out.println("===================== SCORES ======================\n" + stringBuilder.toString());
     }
 
     /* Given a player, a from area and a to area, this function
@@ -614,17 +617,10 @@ public class Game
                 System.out.println(e.getMessage());
             }
 
-            // School DB
-            // String url = "jdbc:postgresql://ate.ita.chalmers.se/";
-            // Properties props = new Properties();
-            // props.setProperty("user",USERNAME);
-            // props.setProperty("password",PASSWORD);
-
-            // Andreas testing DB
-            String url = "jdbc:postgresql://82.196.9.97/";
+            String url = "jdbc:postgresql://ate.ita.chalmers.se/";
             Properties props = new Properties();
-            props.setProperty("user","andreas");
-            props.setProperty("password","hejpadej");
+            props.setProperty("user",USERNAME);
+            props.setProperty("password",PASSWORD);
 
             final Connection conn = DriverManager.getConnection(url, props);
 
